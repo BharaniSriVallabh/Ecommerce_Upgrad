@@ -4,6 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import GetImage from "../common/InitialProducts";
 
 const AdminMenu = ({isAdmin, product}) => {
     const dispatch = useDispatch();
@@ -62,11 +63,13 @@ const AdminMenu = ({isAdmin, product}) => {
 export default function Product({productDetails, isAdmin}) {
     const [product, setProduct] = useState(productDetails);
     const navigate = useNavigate();
+    console.log("Pname" + product.name);
+    console.log("Pimage" + GetImage(product.name));
     return (
         <Card key={product.key} sx={{ maxWidth: 345 , margin: 5, minWidth: 345}}>
             <CardMedia
                 sx={{ height: 240 }}
-                image={product.photo}
+                image={GetImage(product.name)}
                 title={product.name}
             />
             <CardContent>

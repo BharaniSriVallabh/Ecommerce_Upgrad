@@ -60,6 +60,8 @@ export default function SignUp() {
         setErrors(newErrors);
         return;
     }
+    // formData["role"] = ["admin"];
+
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -78,8 +80,9 @@ export default function SignUp() {
     };
 
     SignUp();
-    // localStorage.setItem(formData.email, JSON.stringify(formData));
+
     setOpenSuccess(true);
+    // localStorage.setItem(formData.email, JSON.stringify(formData));
   };
 
   const validateComponent = (event) => {

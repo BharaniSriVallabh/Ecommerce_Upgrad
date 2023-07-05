@@ -7,6 +7,7 @@ import { Alert, Snackbar } from '@mui/material';
 import { json } from 'react-router-dom';
 
 export const Filters = ({ isHideSort }) => {
+    console.log("Why?");
     return (
         <div style={{ display: 'flex', marginTop: '16px' }}>
             <SortProductFilter isHide={isHideSort} />
@@ -17,6 +18,7 @@ export const Filters = ({ isHideSort }) => {
 }
 
 const ProductCatelogue = ({ displayProducts, isAdmin }) => {
+    console.log("DP : " + displayProducts);
     return (
         <div id='productCatelogue' className='flex-wrap'>
             {
@@ -121,6 +123,7 @@ export default function FetchProducts() {
     console.log("Can render == " + canRender);
     if(canRender)
     {
+        console.log("Return?");
     return (
         <div id='productPage'>
             <Snackbar open={orderPlaced} autoHideDuration={6000} onClose={handleOrderPlacedClose} anchorOrigin={{ vertical, horizontal }}>
@@ -147,5 +150,5 @@ export default function FetchProducts() {
             <ProductCatelogue displayProducts={displayProducts} isAdmin={isAdmin} />
         </div>
     );
-}
+    }
 }

@@ -4,20 +4,40 @@ import Shirt from "../assests/images/shirt-1.jpeg";
 import PSFive from "../assests/images/ps5.jpeg";
 import Facewash from "../assests/images/facewash-1.jpeg";
 
-const defaultProducts = async (callback) => {
-    console.log('enterting');
-    try {
-        const response = await fetch('http://localhost:8080/api/products', {
-            method: 'Get'
-        });
-        const jsonData = await response.json();
-        console.log(jsonData);
-        callback(jsonData);
-    } catch (error) {
-        console.log('Error fetching data:', error);
-    }
-};
+// const images = [Shoes, Sandels, Shirt, PSFive, Facewash];
 
-export default function InitialProducts(callback) {
-    return defaultProducts(callback);
+const images = [
+    {
+        name : "Shoes",
+        image : Shoes
+    },
+    {
+        name: "Sandels",
+        image: Sandels
+    },
+    {
+        name: "Shirt",
+        image: Shirt
+    },
+    {
+        name: "PS5",
+        image: PSFive
+    },
+    {
+        name: "Face wash",
+        image: Facewash
+    }
+];
+
+export default function GetImage(name)
+{
+    // return images.filter(x => x.name == name).image;
+    var filter = images.filter(()=>getName(name));
+    function getName(name)
+    {
+        console.log("name",name);
+       return name === "Face wash";
+    }
+    console.log("filter == " + filter.name);
+    return images[2].image;
 }

@@ -17,24 +17,7 @@ const initialState={
 const UserReducer = (state = initialState.user, action) => {
     switch(action.type) {
         case 'login':
-            sessionStorage.setItem('currentUser', JSON.stringify(action.payload));
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(action.payload)
-            };
-            const login = async (callback) => {
-                console.log('enterting log in');
-                try {
-                    const response = await fetch('http://localhost:8080/api/auth/signin', requestOptions);
-                    const jsonData = await response.json();
-                    console.log(jsonData);
-                    callback(jsonData);
-                } catch (error) {
-                    console.log('Error fetching data:', error);
-                }
-            };
-            login();
+            console.log("apl : " + action.payload);
             return action.payload;
         case 'logout':
             sessionStorage.removeItem('currentUser');

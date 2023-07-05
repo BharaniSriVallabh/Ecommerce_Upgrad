@@ -6,11 +6,7 @@ import { Filters } from "./ProductsData";
 import NoMatch from "./NoMatch";
 import './ProductDetails.css';
 
-import Shoes from "../assests/images/shoes-1.jpeg";
-import Sandels from "../assests/images/sandels-1.jpeg";
-import Shirt from "../assests/images/shirt-1.jpeg";
-import PSFive from "../assests/images/ps5.jpeg";
-import Facewash from "../assests/images/facewash-1.jpeg";
+
 
 export default function ProductDetails() {
     let { productId } = useParams();
@@ -19,7 +15,6 @@ export default function ProductDetails() {
     const [productQuantity, setProductQuantity] = useState(1);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const images = [Shoes,Sandels,Shirt,PSFive,Facewash];
 
     const user = useSelector(state => state.user);
     const isLoggedIn = Object.keys(user).length !== 0;
@@ -52,7 +47,7 @@ export default function ProductDetails() {
                     <CardMedia
                         component="img"
                         height="auto"
-                        image={images.filter(x=>x.name == product.name)}
+                        // image={Shoes}
                         alt={product.name}
                     />
                 </div>

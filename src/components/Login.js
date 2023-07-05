@@ -40,23 +40,42 @@ export default function Login(){
         const formData = {};
         const newErrors = {...errors};
         for(let [name, value] of data) {
-          formData[name] = value;
+          formData[name == "email"? "username" : name] = value;
           validate(name, value, newErrors);
         }
         if(Object.keys(newErrors).length !== 0) {
           setErrors(newErrors);
           return;
         }
-        // const userData = JSON.parse(localStorage.getItem(formData.email));
-        // if(userData === null) {
-        //     setOpenFailure(true);
-        //     return;
-        // }
-        // if(userData.password !== formData.password) {
-        //   setOpenPasswordFailure(true);
-        //   return;
-        // }
-      dispatch({ type: 'login', payload: formData });
+        
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      };
+      const login = async (callback) => {
+        console.log('enterting log in');
+        try {
+          const response = await fetch('http://localhost:8080/api/auth/signin', requestOptions);
+          const jsonData = await response.json();
+          console.log(jsonData);
+          callback(true);
+        } catch (error) {
+          console.log('Error fetching data:', error);
+          callback(false);
+        }
+      };
+      login((success) => {
+        console.log(success);
+        if(!success)
+        {
+            setOpenFailure(true);
+            return
+        }
+        else{
+          dispatch({ type: 'login', payload: formData });
+        }
+      });
       };
 
       const validateComponent = (event) => {
