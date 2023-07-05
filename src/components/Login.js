@@ -47,16 +47,16 @@ export default function Login(){
           setErrors(newErrors);
           return;
         }
-        const userData = JSON.parse(localStorage.getItem(formData.email));
-        if(userData === null) {
-            setOpenFailure(true);
-            return;
-        }
-        if(userData.password !== formData.password) {
-          setOpenPasswordFailure(true);
-          return;
-        }
-        dispatch({type: 'login', payload: userData});
+        // const userData = JSON.parse(localStorage.getItem(formData.email));
+        // if(userData === null) {
+        //     setOpenFailure(true);
+        //     return;
+        // }
+        // if(userData.password !== formData.password) {
+        //   setOpenPasswordFailure(true);
+        //   return;
+        // }
+      dispatch({ type: 'login', payload: formData });
       };
 
       const validateComponent = (event) => {

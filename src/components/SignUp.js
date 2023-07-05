@@ -66,13 +66,12 @@ export default function SignUp() {
       body: JSON.stringify(formData)
     };
 
-    const SignUp = async (callback) => {
+    const SignUp = async () => {
       console.log('enterting');
       try {
         const response = await fetch('http://localhost:8080/api/auth/signup', requestOptions);
         const jsonData = await response.json();
         console.log(jsonData);
-        callback(jsonData);
       } catch (error) {
         console.log('Error fetching data:', error);
       }

@@ -2,7 +2,7 @@ import './App.css';
 import NavigationBar from './components/NavigationBar';
 import * as React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Content from './components/Content';
+import Content from './components/Content'
 import { Routes, Route} from "react-router-dom";
 import Login from './components/Login';
 import SignUp from './components/SignUp';
@@ -42,7 +42,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<NavigationBar />}>
-            <Route index element={<Content />} />
+              <Route index element={<Content />} />
             <Route path="products/:productId" element={<ProductDetails />} />
             <Route path="modifyproduct/:productId" element={<ProductForm />} />
             <Route path="addproduct" element={<ProductForm />} />
