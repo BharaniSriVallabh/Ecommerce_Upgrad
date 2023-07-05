@@ -66,7 +66,7 @@ export default function SignUp() {
       body: JSON.stringify(formData)
     };
 
-    const defaultProducts = async (callback) => {
+    const SignUp = async (callback) => {
       console.log('enterting');
       try {
         const response = await fetch('http://localhost:8080/api/auth/signup', requestOptions);
@@ -78,9 +78,7 @@ export default function SignUp() {
       }
     };
 
-    defaultProducts((str) => {
-      console.log("Sup?");
-    })
+    SignUp();
     // localStorage.setItem(formData.email, JSON.stringify(formData));
     setOpenSuccess(true);
   };
