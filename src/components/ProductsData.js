@@ -83,6 +83,7 @@ export default function FetchProducts() {
         }
     }, [displaySetting]);
     const user = useSelector((state) => state.user);
+    const isLoggedIn = Object.keys(user).length !== 0;
     const isAdmin = user.isAdmin;
     const dispatch = useDispatch();
     let products;
@@ -121,6 +122,12 @@ export default function FetchProducts() {
 
     const [vertical, horizontal] = ['top', 'right'];
     console.log("Can render == " + canRender);
+    if (!isLoggedIn) {
+        return (
+            <div className="center fill">Welcome to Upgrad E-Shop,<br />Your one stop shop for everything you need.</div>
+        );
+    }
+
     if(canRender)
     {
         console.log("Return?");

@@ -69,7 +69,7 @@ export default function Product({productDetails, isAdmin}) {
         <Card key={product.key} sx={{ maxWidth: 345 , margin: 5, minWidth: 345}}>
             <CardMedia
                 sx={{ height: 240 }}
-                image={GetImage(product.name)}
+                image={"https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"}
                 title={product.name}
             />
             <CardContent>
