@@ -60,7 +60,28 @@ export default function SignUp() {
         setErrors(newErrors);
         return;
     }
-    localStorage.setItem(formData.email, JSON.stringify(formData));
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    };
+
+    const defaultProducts = async (callback) => {
+      console.log('enterting');
+      try {
+        const response = await fetch('http://localhost:8080/api/auth/signup', requestOptions);
+        const jsonData = await response.json();
+        console.log(jsonData);
+        callback(jsonData);
+      } catch (error) {
+        console.log('Error fetching data:', error);
+      }
+    };
+
+    defaultProducts((str) => {
+      console.log("Sup?");
+    })
+    // localStorage.setItem(formData.email, JSON.stringify(formData));
     setOpenSuccess(true);
   };
 
