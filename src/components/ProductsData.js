@@ -7,7 +7,6 @@ import { Alert, Snackbar } from '@mui/material';
 import { json } from 'react-router-dom';
 
 export const Filters = ({ isHideSort }) => {
-    console.log("Why?");
     return (
         <div style={{ display: 'flex', marginTop: '16px' }}>
             <SortProductFilter isHide={isHideSort} />
@@ -18,14 +17,14 @@ export const Filters = ({ isHideSort }) => {
 }
 
 const ProductCatelogue = ({ displayProducts, isAdmin }) => {
-    console.log("DP : " + displayProducts);
+    console.log("render list : " + JSON.stringify(displayProducts));
     return (
         <div id='productCatelogue' className='flex-wrap'>
             {
                 displayProducts.map(element => {
                     return (
                         <Product
-                            key={element.key}
+                            id={element.id}
                             productDetails={element}
                             isAdmin={isAdmin}
                         />
@@ -41,9 +40,7 @@ export default function FetchProducts() {
     const [dataAvailable,SetDataAvailable] = useState(false);
 
     useEffect(() => {
-
         const defaultProducts = async () => {
-            console.log('enterting');
             try {
                 const response = await fetch('http://localhost:8080/api/products', {
                     method: 'Get'
@@ -52,6 +49,8 @@ export default function FetchProducts() {
                 console.log(jsonData);
                 console.log("Call from here == " + jsonData);
                 setDisplayProducts(jsonData);
+                console.log("Main Data 2 : " + displayProducts);
+                SetMainProducts(jsonData);
                 SetRender(true);
                 SetDataAvailable(true);
             } catch (error) {
@@ -59,10 +58,15 @@ export default function FetchProducts() {
             }
         };
         defaultProducts();
+    }, []);
 
+    useEffect(() => {
+        console.log("Data available : " + dataAvailable);
         if(dataAvailable)
         {
-            let newDisplayProducts = [...products];
+            let newDisplayProducts = [...mainProducts];
+            console.log(newDisplayProducts);
+            console.log(displaySetting);
             newDisplayProducts = newDisplayProducts.filter(product => {
                 if (product.name.toLowerCase().indexOf(displaySetting.search.toLowerCase()) === -1) {
                     return false;
@@ -79,15 +83,19 @@ export default function FetchProducts() {
             } else if (displaySetting.sortBy === 'Newest') {
                 newDisplayProducts.sort(function (a, b) { return new Date(a.modifiedDate) > new Date(b.modifiedDate) });
             }
+            console.log("Modified Data : " + newDisplayProducts.forEach(x=>console.log(x)));
                 setDisplayProducts(newDisplayProducts);
+            console.log("Modified Data 2 : " + displayProducts.forEach(x => console.log(x)));
+
         }
     }, [displaySetting]);
+
     const user = useSelector((state) => state.user);
     const isLoggedIn = Object.keys(user).length !== 0;
     const isAdmin = user.isAdmin;
     const dispatch = useDispatch();
-    let products;
-    const [displayProducts, setDisplayProducts] = useState(products);
+    const [displayProducts, setDisplayProducts] = useState(null);
+    const [mainProducts, SetMainProducts] = useState(null);
     const [canRender, SetRender] = useState(false);
     const orderPlaced = useSelector((state) => state.popups.orderPlaced);
     const productDeleted = useSelector((state) => state.popups.productDeleted);
@@ -95,6 +103,7 @@ export default function FetchProducts() {
     const productAdded = useSelector((state) => state.popups.productAdded);
     const [reRender, setRerender] = useState(true);
     if ((productDeleted !== '' || productModified !== '' || productAdded !== '') && reRender) {
+        setDisplayProducts([...mainProducts]);
         setRerender(false);
     }
 
@@ -130,7 +139,6 @@ export default function FetchProducts() {
 
     if(canRender)
     {
-        console.log("Return?");
     return (
         <div id='productPage'>
             <Snackbar open={orderPlaced} autoHideDuration={6000} onClose={handleOrderPlacedClose} anchorOrigin={{ vertical, horizontal }}>

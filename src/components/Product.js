@@ -12,7 +12,7 @@ const AdminMenu = ({isAdmin, product}) => {
     const handleDeleteMessageClose = (e) => {
         if(e.currentTarget.textContent === 'Ok') {
             let products = JSON.parse(localStorage.getItem('products'));
-            const deleteProduct = products.find((ele) => ele.key === product.key);
+            const deleteProduct = products.find((ele) => ele.key === product.id);
             products.splice(products.indexOf(deleteProduct), 1);
             localStorage.setItem('products', JSON.stringify(products));
             dispatch({type: 'setProductDeleted', payload: product.name});
@@ -26,7 +26,7 @@ const AdminMenu = ({isAdmin, product}) => {
         return(
             <Fragment>
                 <IconButton size="small" aria-label="delete" style={{marginLeft:'auto', marginRight: 5}} onClick={() => {
-                    navigate('/modifyproduct/' + product.key);
+                    navigate('/modifyproduct/' + product.id);
                 }}>
                     <EditIcon />
                 </IconButton>
@@ -61,29 +61,28 @@ const AdminMenu = ({isAdmin, product}) => {
 }
 
 export default function Product({productDetails, isAdmin}) {
-    const [product, setProduct] = useState(productDetails);
+   console.log("Pd : " + JSON.stringify(productDetails));
     const navigate = useNavigate();
-    console.log("Pname" + product.name);
-    console.log("Pimage" + GetImage(product.name));
+
     return (
-        <Card key={product.key} sx={{ maxWidth: 345 , margin: 5, minWidth: 345}}>
+        <Card key={productDetails.id} sx={{ maxWidth: 345 , margin: 5, minWidth: 345}}>
             <CardMedia
                 sx={{ height: 240 }}
-                image={"https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"}
-                title={product.name}
+                image={productDetails.imageUrl}
+                title={productDetails.name}
             />
             <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                    {product.name}
-                    <span style={{float: 'right'}}> &#8377; {product.price}</span>
+                    {productDetails.name}
+                    <span style={{ float: 'right' }}> &#8377; {productDetails.price}</span>
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    {product.description}
+                    {productDetails.description}
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small" variant="contained" onClick={() => {navigate('/products/' + product.key)}}>Buy</Button>
-                <AdminMenu isAdmin={isAdmin} product={product}/>
+                <Button size="small" variant="contained" onClick={() => { navigate('/products/' + productDetails.id)}}>Buy</Button>
+                <AdminMenu isAdmin={isAdmin} product={productDetails}/>
             </CardActions>
         </Card>
       );

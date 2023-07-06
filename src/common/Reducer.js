@@ -28,6 +28,7 @@ const UserReducer = (state = initialState.user, action) => {
 }
 
 const productPageFiltersReducer = (state = initialState.productPageFilters, action) => {
+   console.log("state : " + action.type);
     switch(action.type) {
         case 'setSearch':
             return {...state, search: action.payload};

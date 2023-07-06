@@ -161,7 +161,7 @@ export default function ProductForm() {
                   onChange={validateComponent}
                   error={errors.hasOwnProperty('quantity')}
                   helperText={errors.quantity}
-                  value={product.quantity}
+                    value={product.availableItems}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -188,7 +188,7 @@ export default function ProductForm() {
                   onChange={validateComponent}
                   error={errors.hasOwnProperty('photo')}
                   helperText={errors.photo}
-                  value={product.photo}
+                  value={product.imageurl}
                 />
               </Grid>
               <Grid item xs={12}>

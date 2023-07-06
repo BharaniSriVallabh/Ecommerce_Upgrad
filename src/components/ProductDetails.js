@@ -5,13 +5,16 @@ import { createSearchParams, useNavigate, useParams } from "react-router-dom";
 import { Filters } from "./ProductsData";
 import NoMatch from "./NoMatch";
 import './ProductDetails.css';
+// import FetchAPI from "../common/apiHandler";
 
 
 
 export default function ProductDetails() {
     let { productId } = useParams();
-    const products = JSON.parse(localStorage.getItem('products'));
-    const product = products.find(ele => ele.key == productId);
+    const [canRender, SetRender] = useState(false);
+    const [fetchingData, SetFetch] = useState(false);
+    console.log("product id : " + productId);
+    const [product, setDisplayProducts] = useState(null);
     const [productQuantity, setProductQuantity] = useState(1);
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -21,24 +24,49 @@ export default function ProductDetails() {
 
     useEffect(() => {
         if(!isLoggedIn) {
-            console.log('reached');
             navigate('/');
         }
-    });
+        const requestOptions = {
+            method: 'GET'
+        };
+        const buy = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/api/products/' + productId, requestOptions);
+                const jsonData = await response.json();
+                console.log(jsonData);
+                console.log(jsonData.name);
+                setDisplayProducts(jsonData);
+                SetRender(true);
+            } catch (error) {
+                console.log('Error fetching data:', error);
+            }
+        };
 
-    const ProductQuantityHandler = (e) => {
-        setProductQuantity(e.target.value);
-        if(product.quantity - e.target.value < 0) {
-            setError('Quantity available is insufficient')
-        } else {
-            setError('')
+        // FetchAPI('http://localhost:8080/api/products/' + productId,"",'Get',(success,str)=>
+        // {
+        //     console.log("product callback : " + success + "," + str);
+        // });
+
+        if (!fetchingData)
+        {
+        buy();
+        SetFetch(true);
         }
-    }
-
-    if(product === undefined) {
-        return <NoMatch />
-    }
-
+    });
+   
+    if(canRender)
+    {
+        if (product === undefined) {
+            return <NoMatch />
+        }
+        const ProductQuantityHandler = (e) => {
+            setProductQuantity(e.target.value);
+            if (product.availableItems - e.target.value < 0) {
+                setError('Quantity available is insufficient')
+            } else {
+                setError('')
+            }
+        }
     return(
         <div id='productDetails'>
             <Filters isHideSort={true}/>
@@ -47,14 +75,14 @@ export default function ProductDetails() {
                     <CardMedia
                         component="img"
                         height="auto"
-                        // image={Shoes}
+                        image={product.imageUrl}
                         alt={product.name}
                     />
                 </div>
                 <div className="product-detail">
                     <div className="product-title">
                         <h1 className="product-name">{product.name}</h1>
-                        <span className="product-availability">Available Quantity : {(product.quantity - productQuantity < 0) ? 0 : (product.quantity - productQuantity)}</span>
+                        <span className="product-availability">Available Quantity : {(product.availableItems - productQuantity < 0) ? 0 : (product.availableItems - productQuantity)}</span>
                     </div>
                     <div className="product-category">
                         <span>Category: <b>{product.category}</b></span>
@@ -89,7 +117,7 @@ export default function ProductDetails() {
                                     navigate({
                                         pathname: "/orders",
                                         search: createSearchParams({
-                                            productId: product.key,
+                                            productId: product.id,
                                             quantity: productQuantity
                                         }).toString()
                                     });
@@ -103,4 +131,5 @@ export default function ProductDetails() {
             </div>
         </div>
     );
+}
 }

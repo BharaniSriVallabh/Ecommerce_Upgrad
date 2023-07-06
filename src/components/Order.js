@@ -7,6 +7,7 @@ import AddressDetails from "./AddressDetails";
 import OrderSummary from './OrderSummary';
 import NoMatch from "./NoMatch";
 import './Order.css';
+import FetchAPI from "../common/apiHandler";
 
 
 const steps = ['Items', 'Select Address', 'Confirm Order'];
@@ -14,12 +15,17 @@ const steps = ['Items', 'Select Address', 'Confirm Order'];
 export default function Order() {
     let [searchParams] = useSearchParams();
     const productId = searchParams.get('productId');
+    console.log("order product id == " + productId);
     const quantity = !searchParams.get('quantity') ? 1 : searchParams.get('quantity');
-    const products = JSON.parse(localStorage.getItem('products'));
-    const [address, setAddress] = useState({firstName: '', lastName: '', contactNumber: '', street: '', city: '', state: '', landmark: '', zip: ''});
+    const [products,SetProducts] = useState(null);
+    const [product, setProduct] = useState(null);
+    const [canRender, CanRender] = useState(false);
+
+    const [address, setAddress] = useState({name: '', contactNumber: '', street: '', city: '', state: '', landmark: '', zipcode: '',user: ''});
     const [activeStep, setActiveStep] = useState(0);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [formData, SetFormData] = useState({ id: '', quantity: '', user: '', product: '',address});
 
     const user = useSelector(state => state.user);
     const isLoggedIn = Object.keys(user).length !== 0;
@@ -29,12 +35,18 @@ export default function Order() {
             console.log('reached');
             navigate('/');
         }
+        // console.log("Try1 == " + str + "  ,   " + success);
+
+        // setAddress(user.name,user.contactNumber);
+       FetchAPI('http://localhost:8080/api/addresses/' + productId,"",'Post',(success,str)=>
+        {
+            console.log("Try == " + str  + "," + success);
+        });
     });
 
     if(!searchParams.get('productId')) {
         return <NoMatch />
     }
-    const product = products.find(ele => ele.key == productId);
 
     const handleNext = () => {
         if(activeStep === 1) {
@@ -72,15 +84,16 @@ export default function Order() {
                 return <OrderSummary address={address} product={product} quantity={quantity} />
         }
     }
-    
+   
     function ItemDetails() {
+        if (canRender) {
         return(
             <div className="product-items-section">
                     <div className="product-image">
                         <CardMedia
                             component="img"
                             height="auto"
-                            image={product.photo}
+                            image={product.imageUrl}
                             alt={product.name}
                         />
                     </div>
@@ -104,6 +117,7 @@ export default function Order() {
                 </div>
         );
     }
+}
 
     function setAddressCallBack(addressDetails) {
         setAddress(addressDetails);

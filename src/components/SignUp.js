@@ -60,7 +60,7 @@ export default function SignUp() {
         setErrors(newErrors);
         return;
     }
-    // formData["role"] = ["admin"];
+    formData["role"] = ["ADMIN"];
 
     const requestOptions = {
       method: 'POST',
