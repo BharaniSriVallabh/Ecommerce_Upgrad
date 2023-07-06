@@ -123,7 +123,7 @@ export default function ProductDetails() {
                                     });
                                 }
                             }}>
-                                PLACE ORDER
+                            PLACE ORDER
                             </Button>
                         </div>
                     </form>

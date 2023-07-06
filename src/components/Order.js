@@ -15,17 +15,19 @@ const steps = ['Items', 'Select Address', 'Confirm Order'];
 export default function Order() {
     let [searchParams] = useSearchParams();
     const productId = searchParams.get('productId');
+    const [canRender, SetRender] = useState(false);
+    const [fetchingData, SetFetch] = useState(false);
     console.log("order product id == " + productId);
+    
     const quantity = !searchParams.get('quantity') ? 1 : searchParams.get('quantity');
-    const [products,SetProducts] = useState(null);
-    const [product, setProduct] = useState(null);
-    const [canRender, CanRender] = useState(false);
 
     const [address, setAddress] = useState({name: '', contactNumber: '', street: '', city: '', state: '', landmark: '', zipcode: '',user: ''});
     const [activeStep, setActiveStep] = useState(0);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [formData, SetFormData] = useState({ id: '', quantity: '', user: '', product: '',address});
+    const [productDetail, setDisplayProducts] = useState(null);
+    const [products, setProducts] = useState(null);
 
     const user = useSelector(state => state.user);
     const isLoggedIn = Object.keys(user).length !== 0;
@@ -35,13 +37,29 @@ export default function Order() {
             console.log('reached');
             navigate('/');
         }
-        // console.log("Try1 == " + str + "  ,   " + success);
+        const requestOptions = {
+            method: 'GET'
+        };
+        const buy = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/api/products/' + productId, requestOptions);
+                const response2 = await fetch('http://localhost:8080/api/products/', requestOptions);
+                const jsonData = await response.json();
+                const jsonData2 = await response2.json();
+                console.log(jsonData);
+                console.log(jsonData2);
+                setDisplayProducts(jsonData);
+                setProducts(jsonData2);
+                SetRender(true);
+            } catch (error) {
+                console.log('Error fetching data:', error);
+            }
+        };
 
-        // setAddress(user.name,user.contactNumber);
-       FetchAPI('http://localhost:8080/api/addresses/' + productId,"",'Post',(success,str)=>
-        {
-            console.log("Try == " + str  + "," + success);
-        });
+        if (!fetchingData) {
+            buy();
+            SetFetch(true);
+        }
     });
 
     if(!searchParams.get('productId')) {
@@ -58,7 +76,7 @@ export default function Order() {
             return;
         } else if(activeStep === steps.length - 1) {
             const newProducts = [...products];
-            const index = newProducts.indexOf(product)
+            const index = newProducts.indexOf(productDetail)
             newProducts[index].quantity = newProducts[index].quantity - quantity;
             const dateTime = new Date().toLocaleString();
             newProducts[index].modifiedDate = dateTime;
@@ -81,43 +99,43 @@ export default function Order() {
             case 1:
                 return <AddressDetails setAddressCallBack={setAddressCallBack} addressDetails={address}/>
             case 2:
-                return <OrderSummary address={address} product={product} quantity={quantity} />
+                return <OrderSummary address={address} product={productDetail} quantity={quantity} />
         }
     }
    
     function ItemDetails() {
-        if (canRender) {
+        if(canRender)
+        {
         return(
             <div className="product-items-section">
                     <div className="product-image">
                         <CardMedia
                             component="img"
                             height="auto"
-                            image={product.imageUrl}
-                            alt={product.name}
+                        image={productDetail.imageUrl}
+                        alt={productDetail.name}
                         />
                     </div>
                     <div className="product-detail">
                         <div className="product-title">
-                            <h1 className="product-name">{product.name}</h1>
+                        <h1 className="product-name">{productDetail.name}</h1>
                         </div>
                         <div>
                             <span className="order-availability">Quantity : {quantity}</span>
                         </div>
                         <div className="product-category">
-                            <span>Category: <b>{product.category}</b></span>
+                        <span>Category: <b>{productDetail.category}</b></span>
                         </div>
                         <div className="product-description">
-                            <span>{product.description}</span>
+                        <span>{productDetail.description}</span>
                         </div>
                         <div className="product-price">
-                            <span> Total Price: &#8377;  {product.price * quantity}</span>
+                        <span> Total Price: &#8377;  {productDetail.price * quantity}</span>
                         </div>
                     </div>
                 </div>
         );
-    }
-}
+}}
 
     function setAddressCallBack(addressDetails) {
         setAddress(addressDetails);

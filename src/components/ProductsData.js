@@ -7,6 +7,20 @@ import { Alert, Snackbar } from '@mui/material';
 import { json } from 'react-router-dom';
 
 export const Filters = ({ isHideSort }) => {
+    const defaultCategories = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/products/categories', {
+                method: 'Get'
+            });
+            const jsonData = await response.json();
+            console.log("hey data! " + jsonData);
+           
+        } catch (error) {
+            console.log('Error fetching data:', error);
+        }
+    };
+    defaultCategories();
+
     return (
         <div style={{ display: 'flex', marginTop: '16px' }}>
             <SortProductFilter isHide={isHideSort} />
@@ -83,10 +97,7 @@ export default function FetchProducts() {
             } else if (displaySetting.sortBy === 'Newest') {
                 newDisplayProducts.sort(function (a, b) { return new Date(a.modifiedDate) > new Date(b.modifiedDate) });
             }
-            console.log("Modified Data : " + newDisplayProducts.forEach(x=>console.log(x)));
                 setDisplayProducts(newDisplayProducts);
-            console.log("Modified Data 2 : " + displayProducts.forEach(x => console.log(x)));
-
         }
     }, [displaySetting]);
 

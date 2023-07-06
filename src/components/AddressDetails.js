@@ -28,6 +28,7 @@ export default function AddressDetails({setAddressCallBack, addressDetails}) {
         setAddressCallBack(formData);
         return false;
     };
+    let count = 0;
 
     const handleSaveAddress = () => {
         const data = new FormData(document.getElementById("addressForm"));
@@ -43,7 +44,28 @@ export default function AddressDetails({setAddressCallBack, addressDetails}) {
         }
         const newSavedAddresses = [...savedAddresses, formData];
         localStorage.setItem(user.email + '_addresses', JSON.stringify(newSavedAddresses));
-        setSavedAddresses(newSavedAddresses);
+      setSavedAddresses(formData);
+      if (count === 0)
+      {
+        const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+      };
+
+      const saveAddress = async () => {
+        console.log('enterting log in');
+        try {
+          const response = await fetch('http://localhost:8080/api/addresses', requestOptions);
+          const jsonData = await response.json();
+          console.log(jsonData);
+        } catch (error) {
+          console.log('Error fetching data:', error);
+        }
+      };
+      saveAddress();
+      count++;
+    }
     }
 
     const [errors, setErrors] = useState({});
