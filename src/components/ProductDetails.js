@@ -91,7 +91,7 @@ export default function ProductDetails() {
                         <span>{product.description}</span>
                     </div>
                     <div className="product-price">
-                        <span> &#8377;  {product.price}</span>
+                        <span> &#8377;  {productQuantity * product.price}</span>
                     </div>
                     <form>
                         <div className="product-quantity">

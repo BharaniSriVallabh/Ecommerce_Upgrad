@@ -32,18 +32,22 @@ export default function AddressDetails({setAddressCallBack, addressDetails}) {
 
     const handleSaveAddress = () => {
         const data = new FormData(document.getElementById("addressForm"));
-        const formData = {};
+      const formData = {};
         const newErrors = {...errors};
         for(let [name, value] of data) {
             formData[name] = value;
             validate(name, value, newErrors);
         }
+      formData["user"] = user.token;
+      console.log(JSON.stringify(formData));
+
         if(Object.keys(newErrors).length !== 0) {
             setErrors(newErrors);
             return;
         }
         const newSavedAddresses = [...savedAddresses, formData];
         localStorage.setItem(user.email + '_addresses', JSON.stringify(newSavedAddresses));
+      console.log(JSON.stringify(formData));
       setSavedAddresses(formData);
       if (count === 0)
       {
@@ -129,29 +133,15 @@ export default function AddressDetails({setAddressCallBack, addressDetails}) {
         <Grid item xs={12}>
           <TextField
             required
-            id="firstName"
-            name="firstName"
+            id="name"
+            name="name"
             label="First name"
             fullWidth
             autoComplete="given-name"
             onChange={validateComponent}
-            error={errors.hasOwnProperty('firstName')}
+            error={errors.hasOwnProperty('name')}
             helperText={errors.firstName}
             value={address.firstName}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            id="lastName"
-            name="lastName"
-            label="Last name"
-            fullWidth
-            autoComplete="family-name"
-            onChange={validateComponent}
-            error={errors.hasOwnProperty('lastName')}
-            helperText={errors.lastName}
-            value={address.lastName}
           />
         </Grid>
         <Grid item xs={12}>
@@ -226,8 +216,8 @@ export default function AddressDetails({setAddressCallBack, addressDetails}) {
         <Grid item xs={12}>
           <TextField
             required
-            id="zip"
-            name="zip"
+            id="zipcode"
+            name="zipcode"
             label="Zip / Postal code"
             fullWidth
             autoComplete="shipping postal-code"

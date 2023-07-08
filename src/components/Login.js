@@ -60,13 +60,13 @@ export default function Login(){
           const response = await fetch('http://localhost:8080/api/auth/signin', requestOptions);
           const jsonData = await response.json();
           console.log(jsonData);
-          callback(true);
+          callback(true,jsonData);
         } catch (error) {
           console.log('Error fetching data:', error);
-          callback(false);
+          callback(false,"");
         }
       };
-      login((success) => {
+      login((success, jsonData) => {
         console.log(success);
         if(!success)
         {
@@ -74,6 +74,8 @@ export default function Login(){
             return
         }
         else{
+          formData["token"] = jsonData.token;
+          console.log(JSON.stringify(formData));
           dispatch({ type: 'login', payload: formData });
         }
       });
